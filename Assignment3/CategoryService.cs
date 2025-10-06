@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    internal class CategoryService
+    public class CategoryService
     {
-        private List<Category> categories;
+        public List<Category> categories = new List<Category> { new Category { Cid=1, Name="Beverages" }, new Category { Cid = 2, Name = "Condiments" }, new Category { Cid = 3, Name = "Confections" } };
 
         public List<Category> GetCategories()
         {

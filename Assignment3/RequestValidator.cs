@@ -55,26 +55,37 @@ namespace Assignment3
                 return response;
 
             }
-            if (request.Body == null)
+            
+            if ((request.Method == "create" || request.Method == "update" || request.Method == "echo") &&  request.Body == null)
             {
                 response.Status = "missing body";
                 return response;
             }
-            if(isValidJson(request.Body))
+            
+            if(request.Body != null && !isValidJson(request.Body, request.Method))
             {
-                response.Status = "1 Ok";
+                response.Status = "illegal body";
                 return response;
             }
+            
 
-                UrlParser urlParser = new UrlParser();
-            if (!urlParser.ParseUrl(request.Path)) return null;
+            //    UrlParser urlParser = new UrlParser();
+            //if (!urlParser.ParseUrl(request.Path)) return null;
 
             if(!ValidateUnixTimestamp(request.Date)) return null;
 
+            response.Status = "1 Ok";
             return response;
+
+
         }
-        public static bool isValidJson (string input)
+        public static bool isValidJson (string input, string method)
         {
+            if (method == "echo")
+            {
+                return true;
+            }
+
             try
             {
                 JsonDocument.Parse(input);

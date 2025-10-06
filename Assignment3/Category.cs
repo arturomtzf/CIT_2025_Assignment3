@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assignment3
 {
-    internal class Category
+    public class Category
     {
         public int Cid { get; set; }
         public string Name { get; set; }
