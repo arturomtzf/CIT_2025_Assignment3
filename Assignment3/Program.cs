@@ -6,7 +6,7 @@ namespace Assignment3
     {
         static void Main(string[] args)
         {
-            int port = 5001;
+            int port = 5000;
 
             var server = new EchoServer(port);
 

@@ -29,6 +29,16 @@ namespace Assignment3
         public Response ValidateRequest(Request request)
         {
             Response response = new Response();
+            if(request == null)
+            {
+                response.Status = "empty request";
+                return response;
+            }
+            if (request.Date == null)
+            {
+                response.Status = "missing date";
+                return response;
+            }
             if (request.Method == null)
             {
                 response.Status = "missing method";
@@ -42,11 +52,6 @@ namespace Assignment3
             if(string.IsNullOrEmpty(request.Path))
             {
                 response.Status = "missing path";
-                return response;
-            }
-            if (request.Date == null)
-            {
-                response.Status = "missing date";
                 return response;
             }
             if(!ValidateUnixTimestamp(request.Date))
@@ -68,16 +73,17 @@ namespace Assignment3
                 return response;
             }
             
-
-            //    UrlParser urlParser = new UrlParser();
-            //if (!urlParser.ParseUrl(request.Path)) return null;
+            UrlParser urlParser = new UrlParser();
+            if (!urlParser.ParseUrl(request.Path, request.Method)) 
+            {
+                response.Status = "5 not found";
+                return response;
+            }
 
             if(!ValidateUnixTimestamp(request.Date)) return null;
 
             response.Status = "1 Ok";
             return response;
-
-
         }
         public static bool isValidJson (string input, string method)
         {

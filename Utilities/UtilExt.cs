@@ -1,0 +1,73 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Sockets;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+
+namespace Utilities
+{
+    public static class UtilExt
+    {
+        public class Request
+        {
+            public string Method { get; set; }
+            public string Path { get; set; }
+            public string Date { get; set; }
+            public string Body { get; set; }
+        }
+
+        public static string Read(this TcpClient client)
+        {
+            var stream = client.GetStream();
+
+            byte[] buffer = new byte[1024];
+
+            var readCount = stream.Read(buffer);
+
+            return Encoding.UTF8.GetString(buffer, 0, readCount);
+        }
+
+        ///---------------------------
+        // Helpers
+        ///---------------------------
+        public static string ToJson(this object data)
+        {
+            return JsonSerializer.Serialize(data, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        }
+
+        public static T FromJson<T>(this string element)
+        {
+            return JsonSerializer.Deserialize<T>(element, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+        }
+
+        public static void SendResponse(this TcpClient client, string request)
+        {
+            var msg = Encoding.UTF8.GetBytes(request);
+            client.GetStream().Write(msg, 0, msg.Length);
+        }
+
+        public static Request ReadRequest(this TcpClient client)
+        {
+            var strm = client.GetStream();
+            //strm.ReadTimeout = 250;
+            byte[] resp = new byte[2048];
+            using (var memStream = new MemoryStream())
+            {
+                int bytesread = 0;
+                do
+                {
+                    bytesread = strm.Read(resp, 0, resp.Length);
+                    memStream.Write(resp, 0, bytesread);
+
+                } while (bytesread == 2048);
+
+                var responseData = Encoding.UTF8.GetString(memStream.ToArray());
+                //return JsonSerializer.Deserialize<Response>(responseData);
+                // if the naming policy is used you need to do the same on the server side
+                return JsonSerializer.Deserialize<Request>(responseData, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            }
+        }
+    }
+}
