@@ -6,7 +6,11 @@ namespace Assignment3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello Web Service :-)");
+            int port = 5001;
+
+            var server = new EchoServer(port);
+
+            server.Run();
         }
     }
 }
