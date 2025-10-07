@@ -34,6 +34,12 @@ namespace Assignment3
                 response.Status = "empty request";
                 return response;
             }
+            if(request.Method == "echo" && !string.IsNullOrEmpty(request.Body))
+            {
+                response.Status = "1 Ok";
+                response.Body = request.Body;
+                return response;
+            }
             if (request.Date == null)
             {
                 response.Status = "missing date";
@@ -74,9 +80,10 @@ namespace Assignment3
             }
             
             UrlParser urlParser = new UrlParser();
-            if (!urlParser.ParseUrl(request.Path, request.Method)) 
+            string parseUrlResponse = urlParser.ParseUrl(request.Path, request.Method);
+            if (parseUrlResponse != "true") 
             {
-                response.Status = "5 not found";
+                response.Status = parseUrlResponse;
                 return response;
             }
 

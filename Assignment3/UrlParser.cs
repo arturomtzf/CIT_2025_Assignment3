@@ -32,15 +32,40 @@ namespace Assignment3
             return false;
         }
 
-        public bool ParseUrl(string url, string method)
+        public string ParseUrl(string url, string method)
         {
+            string notFound = "5 not found";
+            string success = "true";
+            string badRequest = "4 bad request";
+            var methodsThatRequireID = new List<string> { "update", "delete" };
+            if (string.IsNullOrEmpty(url)) return notFound;
+
             var split = url.Split('/');
+
+            // if (methodsThatRequireID.Contains(method) && split.Length < 4) return "4 bad request";// it doesn't contain id
+
+            if (split[1] == "api" && split[2] == "xxx" && (method == "create" || method == "update"))
+            {
+                return success;
+            }
             if (split[1] == "api" && split[2] == "categories")
             {
-                if (split.Length > 3)
+                if (methodsThatRequireID.Contains(method) && split.Length == 3) return badRequest;
+
+                if (split.Length > 3) // It contains an id
                 {
+                    if (method == "create") return badRequest;
+
                     HasId = true;
-                    Id = int.Parse(split[3]);
+                    int tempId;
+                    if (int.TryParse(split[3], out tempId))
+                    {
+                        Id = tempId;
+                    }
+                    else
+                    {
+                        return badRequest;
+                    }
                     Path = split[0] + "/" + split[1] + "/" + split[2];
                 }
                 else
@@ -48,13 +73,9 @@ namespace Assignment3
                     HasId = false;
                     Path = url;
                 }
-                return true;
+                return success;
             }
-            if (split[1] == "api" && split[2] == "xxx" && (method == "create" || method == "update"))
-            {
-                return true;
-            }
-            return false;
+            return notFound;
         }
     }
 }
