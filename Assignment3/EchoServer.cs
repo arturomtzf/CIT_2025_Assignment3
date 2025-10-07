@@ -16,6 +16,7 @@ namespace Assignment3
     public class EchoServer
     {
         TcpListener _server;
+        CategoryService catService = new CategoryService();
 
         public int Port { get; set; }
 
@@ -50,6 +51,7 @@ namespace Assignment3
             LogRequest(request);
 
             RequestValidator rv = new RequestValidator();
+            rv.setCategoryService(catService);
             Response res = rv.ValidateRequest(request);
 
             LogResponse(res);
