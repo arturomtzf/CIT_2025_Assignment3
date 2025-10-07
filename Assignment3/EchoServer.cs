@@ -44,21 +44,33 @@ namespace Assignment3
             Request request = ReadRequest(client);
             if (request == null)
             {
-                Console.WriteLine("No request received, closing connection.");
-                var empty = Encoding.UTF8.GetBytes(string.Empty);
-                client.GetStream().Write(empty, 0, empty.Length);
+                SendResponse(client, new Response { Status = "4 Bad Request" }); // In case the request is empty
             }
 
-            Console.WriteLine("---------------------");
-            Console.WriteLine($"Method: {request?.Method}, Path: {request?.Path}, Date: {request?.Date}, Body: {request?.Body}");
+            LogRequest(request);
 
             RequestValidator rv = new RequestValidator();
-
             Response res = rv.ValidateRequest(request);
 
+            LogResponse(res);
+
+            SendResponse(client, res);
+        }
+
+        private void LogResponse(Response res)
+        {
             Console.WriteLine($"Status: {res.Status}, Body: {res.Body}");
             Console.WriteLine("---------------------\n");
+        }
 
+        private void LogRequest(Request request)
+        {
+            Console.WriteLine("---------------------");
+            Console.WriteLine($"Method: {request?.Method}, Path: {request?.Path}, Date: {request?.Date}, Body: {request?.Body}");
+        }
+
+        private void SendResponse(TcpClient client, Response res)
+        {
             string json = JsonSerializer.Serialize(res, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
             var msg = Encoding.UTF8.GetBytes(json);
             client.GetStream().Write(msg, 0, msg.Length);
@@ -83,13 +95,13 @@ namespace Assignment3
                 }
                 catch (IOException ex)
                 {
-                    Console.WriteLine($"No data received within timeout: {ex.Message}");
+                    // Console.WriteLine($"No data received within timeout: {ex.Message}");
                     return null;
                 }
 
                 if (memStream.Length == 0)
                 {
-                    Console.WriteLine("Empty request.");
+                    // Console.WriteLine("empty request");
                     return null;
                 }
 
