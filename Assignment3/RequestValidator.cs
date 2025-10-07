@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -9,6 +10,12 @@ namespace Assignment3
 {
     public class RequestValidator
     {
+        public static UrlParser urlParser = new UrlParser();
+        public CategoryService categoryService;
+        public void setCategoryService(CategoryService categoryService)
+        {
+            this.categoryService = categoryService;
+        }
         private bool ValidateMethod(string method)
         {
             List<string> possibleMethods = new List<string> { "create", "read", "update", "delete", "echo" };
@@ -79,7 +86,6 @@ namespace Assignment3
                 return response;
             }
             
-            UrlParser urlParser = new UrlParser();
             string parseUrlResponse = urlParser.ParseUrl(request.Path, request.Method);
             if (parseUrlResponse != "true") 
             {
@@ -90,7 +96,72 @@ namespace Assignment3
             if(!ValidateUnixTimestamp(request.Date)) return null;
 
             response.Status = "1 Ok";
+            if(categoryService != null)
+                response = connectToCategory(request, response);
+
             return response;
+        }
+        public Response connectToCategory(Request request, Response response)
+        {
+            if (request.Path.StartsWith("/api"))
+            {
+                if(request.Path == "/api/categories" && request.Method == "read")
+                {
+                    List<Category> categories = categoryService.GetCategories();
+                    response.Body = parseToJSON(categories);
+                    return response;
+                }
+                if(request.Path.StartsWith("/api/categories/"))
+                {
+                    if(request.Method == "read")
+                    {
+                        Category category = categoryService.GetCategory(urlParser.Id);
+                        if (category == null)
+                        {
+                            response.Status = "5 not found";
+                            return response;
+                        }
+                        response.Body = parseToJSON(category);
+                        return response;
+                    }
+                    if(request.Method == "update")
+                    {
+                        Category messageCategory = parseFromJSON(request.Body);
+
+                        bool isUpdated = categoryService.UpdateCategory(urlParser.Id, messageCategory.Name);
+
+                        if (isUpdated)
+                        {
+                            response.Status = "3 updated";
+                            return response;
+                        }
+                        else
+                        {
+                            response.Status = "5 not found";
+                            return response;
+                        }
+                    }
+                }
+            }
+            return response;
+        }
+        public static string parseToJSON(List<Category> categories)
+        {
+            var categoryAsJson = JsonSerializer.Serialize<List<Category>>(categories
+                        , new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return categoryAsJson;
+        }
+        public static string parseToJSON(Category category)
+        {
+            var categoryAsJson = JsonSerializer.Serialize<Category>(category
+                        , new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return categoryAsJson;
+        }
+        public static Category parseFromJSON(string json)
+        {
+            Category category = JsonSerializer.Deserialize<Category>(json
+                , new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            return category;
         }
         public static bool isValidJson (string input, string method)
         {

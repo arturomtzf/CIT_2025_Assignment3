@@ -330,149 +330,149 @@ public class PartIITests
         Assert.Equal(expectedResponse.ToJson(), response.ToJson());
     }
 
-    // [Fact]
-    // public void Request_ReadCategoryWithValidId_ShouldReturnOkAndCategoryInBody()
-    // {
-    //     var client = Connect();
+    [Fact]
+    public void Request_ReadCategoryWithValidId_ShouldReturnOkAndCategoryInBody()
+    {
+        var client = Connect();
 
-    //     var request = new
-    //     {
-    //         Method = "read",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp()
-    //     };
+        var request = new
+        {
+            Method = "read",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
 
-    //     var expectedResponse = new Response
-    //     {
-    //         Status = "1 Ok",
-    //         Body = (new { cid = 1, name = "Beverages" }.ToJson())
-    //     };
+        var expectedResponse = new Response
+        {
+            Status = "1 Ok",
+            Body = (new { cid = 1, name = "Beverages" }.ToJson())
+        };
 
-    //     Assert.Equal(expectedResponse.ToJson(), response.ToJson());
-    // }
+        Assert.Equal(expectedResponse.ToJson(), response.ToJson());
+    }
 
-    // [Fact]
-    // public void Request_ReadCategoryWithInvalidId_ShouldReturnNotFound()
-    // {
-    //     var client = Connect();
+    [Fact]
+    public void Request_ReadCategoryWithInvalidId_ShouldReturnNotFound()
+    {
+        var client = Connect();
 
-    //     var request = new
-    //     {
-    //         Method = "read",
-    //         Path = "/api/categories/123",
-    //         Date = UnixTimestamp()
-    //     };
+        var request = new
+        {
+            Method = "read",
+            Path = "/api/categories/123",
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
 
-    //     Assert.Contains("5 not found", response.Status.ToLower());
-    // }
-
-
-    // /* Update tests  */
-
-    // [Fact]
-    // public void Request_UpdateCategoryWithValidIdAndBody_ShouldReturnUpdated()
-    // {
-    //     var client = Connect();
-
-    //     var request = new
-    //     {
-    //         Method = "update",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
-    //     };
-
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        Assert.Contains("5 not found", response.Status.ToLower());
+    }
 
 
-    //     Assert.Contains("3 updated", response.Status.ToLower());
+    /* Update tests  */
 
-    //     // reset data
+    [Fact]
+    public void Request_UpdateCategoryWithValidIdAndBody_ShouldReturnUpdated()
+    {
+        var client = Connect();
 
-    //     client = Connect();
+        var request = new
+        {
+            Method = "update",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp(),
+            Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
+        };
 
-    //     var resetRequest = new
-    //     {
-    //         Method = "update",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { cid = 1, name = "Beverages" }).ToJson()
-    //     };
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
 
-    //     client.SendRequest(resetRequest.ToJson());
-    //     client.ReadResponse();
-    // }
 
-    // [Fact]
-    // public void Request_UpdateCategoryValidIdAndBody_ShouldReturnChangedCategoryName()
-    // {
-    //     var client = Connect();
+        Assert.Contains("3 updated", response.Status.ToLower());
 
-    //     var request = new
-    //     {
-    //         Method = "update",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
-    //     };
+        // reset data
 
-    //     client.SendRequest(request.ToJson());
-    //     client.ReadResponse();
+        client = Connect();
 
-    //     client = Connect();
-    //     var readRequest = new
-    //     {
-    //         Method = "read",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp()
-    //     };
+        var resetRequest = new
+        {
+            Method = "update",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp(),
+            Body = (new { cid = 1, name = "Beverages" }).ToJson()
+        };
 
-    //     client.SendRequest(readRequest.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(resetRequest.ToJson());
+        client.ReadResponse();
+    }
 
-    //     Assert.Equal("BeveragesTesting", response.Body.FromJson<Category>().Name);
+    [Fact]
+    public void Request_UpdateCategoryValidIdAndBody_ShouldReturnChangedCategoryName()
+    {
+        var client = Connect();
 
-    //     // reset data
+        var request = new
+        {
+            Method = "update",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp(),
+            Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
+        };
 
-    //     client = Connect();
+        client.SendRequest(request.ToJson());
+        client.ReadResponse();
 
-    //     var resetRequest = new
-    //     {
-    //         Method = "update",
-    //         Path = "/api/categories/1",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { cid = 1, name = "Beverages" }).ToJson()
-    //     };
+        client = Connect();
+        var readRequest = new
+        {
+            Method = "read",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(resetRequest.ToJson());
-    //     client.ReadResponse();
-    // }
+        client.SendRequest(readRequest.ToJson());
+        var response = client.ReadResponse();
 
-    // [Fact]
-    // public void Request_UpdateCategoryInvalidId_ShouldReturnNotFound()
-    // {
-    //     var client = Connect();
+        Assert.Equal("BeveragesTesting", response.Body.FromJson<Category>().Name);
 
-    //     var request = new
-    //     {
-    //         Method = "update",
-    //         Path = "/api/categories/123",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
-    //     };
+        // reset data
 
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        client = Connect();
 
-    //     Assert.Contains("5 not found", response.Status.ToLower());
-    // }
+        var resetRequest = new
+        {
+            Method = "update",
+            Path = "/api/categories/1",
+            Date = UnixTimestamp(),
+            Body = (new { cid = 1, name = "Beverages" }).ToJson()
+        };
+
+        client.SendRequest(resetRequest.ToJson());
+        client.ReadResponse();
+    }
+
+    [Fact]
+    public void Request_UpdateCategoryInvalidId_ShouldReturnNotFound()
+    {
+        var client = Connect();
+
+        var request = new
+        {
+            Method = "update",
+            Path = "/api/categories/123",
+            Date = UnixTimestamp(),
+            Body = (new { cid = 1, name = "BeveragesTesting" }).ToJson()
+        };
+
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
+
+        Assert.Contains("5 not found", response.Status.ToLower());
+    }
 
 
     // /* Create Tests  */
