@@ -475,92 +475,92 @@ public class PartIITests
     }
 
 
-    // /* Create Tests  */
+    /* Create Tests  */
 
-    // [Fact]
-    // public void Request_CreateCategoryWithValidBodyArgument_ShouldCreateNewCategory()
-    // {
-    //     var client = Connect();
+    [Fact]
+    public void Request_CreateCategoryWithValidBodyArgument_ShouldCreateNewCategory()
+    {
+        var client = Connect();
 
-    //     var request = new
-    //     {
-    //         Method = "create",
-    //         Path = "/api/categories",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { name = "Testing" }).ToJson()
-    //     };
+        var request = new
+        {
+            Method = "create",
+            Path = "/api/categories",
+            Date = UnixTimestamp(),
+            Body = (new { name = "Testing" }).ToJson()
+        };
 
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
 
-    //     var category = response.Body.FromJson<Category>();
+        var category = response.Body.FromJson<Category>();
 
-    //     Assert.Contains("Testing", category.Name);
-    //     Assert.True(category.Id > 0);
+        Assert.Contains("Testing", category.Name);
+        Assert.True(category.Id > 0);
 
-    //     // reset
+        // reset
 
-    //     client = Connect();
-    //     var resetRequest = new
-    //     {
-    //         Method = "delete",
-    //         Path = "/api/categories/" + category.Id,
-    //         Date = UnixTimestamp()
-    //     };
+        client = Connect();
+        var resetRequest = new
+        {
+            Method = "delete",
+            Path = "/api/categories/" + category.Id,
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(resetRequest.ToJson());
-    //     client.ReadResponse();
-    // }
+        client.SendRequest(resetRequest.ToJson());
+        client.ReadResponse();
+    }
 
 
-    // /* Delete Tests  */
+    /* Delete Tests  */
 
-    // [Fact]
-    // public void Request_DeleteCategoryWithValidId_ShouldRemoveCategory()
-    // {
-    //     var client = Connect();
+    [Fact]
+    public void Request_DeleteCategoryWithValidId_ShouldRemoveCategory()
+    {
+        var client = Connect();
 
-    //     var request = new
-    //     {
-    //         Method = "create",
-    //         Path = "/api/categories",
-    //         Date = UnixTimestamp(),
-    //         Body = (new { name = "TestingDeleteCategory" }).ToJson()
-    //     };
+        var request = new
+        {
+            Method = "create",
+            Path = "/api/categories",
+            Date = UnixTimestamp(),
+            Body = (new { name = "TestingDeleteCategory" }).ToJson()
+        };
 
-    //     client.SendRequest(request.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(request.ToJson());
+        var response = client.ReadResponse();
 
-    //     client = Connect();
-    //     var verifyRequest = new
-    //     {
-    //         Method = "delete",
-    //         Path = "/api/categories/" + response.Body.FromJson<Category>().Id,
-    //         Date = UnixTimestamp()
-    //     };
+        client = Connect();
+        var verifyRequest = new
+        {
+            Method = "delete",
+            Path = "/api/categories/" + response.Body.FromJson<Category>().Id,
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(verifyRequest.ToJson());
-    //     response = client.ReadResponse();
+        client.SendRequest(verifyRequest.ToJson());
+        response = client.ReadResponse();
 
-    //     Assert.Contains("1 ok", response.Status.ToLower());
-    // }
+        Assert.Contains("1 ok", response.Status.ToLower());
+    }
 
-    // [Fact]
-    // public void Request_DeleteCategoryWithInvalidId_ShouldReturnNotFound()
-    // {
-    //     var client = Connect();
-    //     var verifyRequest = new
-    //     {
-    //         Method = "delete",
-    //         Path = "/api/categories/1234",
-    //         Date = UnixTimestamp()
-    //     };
+    [Fact]
+    public void Request_DeleteCategoryWithInvalidId_ShouldReturnNotFound()
+    {
+        var client = Connect();
+        var verifyRequest = new
+        {
+            Method = "delete",
+            Path = "/api/categories/1234",
+            Date = UnixTimestamp()
+        };
 
-    //     client.SendRequest(verifyRequest.ToJson());
-    //     var response = client.ReadResponse();
+        client.SendRequest(verifyRequest.ToJson());
+        var response = client.ReadResponse();
 
-    //     Assert.Contains("5 not found", response.Status.ToLower());
-    // }
+        Assert.Contains("5 not found", response.Status.ToLower());
+    }
 
 
 

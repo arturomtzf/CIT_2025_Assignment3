@@ -59,5 +59,15 @@ namespace Assignment3
             categories.Add(new Category { Cid = id, Name = name });
             return true;
         }
+
+        public int NextSequenceID()
+        {
+            int maxID = -1;
+            foreach(Category c in categories)
+            {
+                if(c.Cid > maxID) maxID = c.Cid;
+            }
+            return maxID + 1;
+        }
     }
 }

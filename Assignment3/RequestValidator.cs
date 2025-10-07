@@ -105,11 +105,34 @@ namespace Assignment3
         {
             if (request.Path.StartsWith("/api"))
             {
-                if(request.Path == "/api/categories" && request.Method == "read")
+                if(request.Path == "/api/categories")
                 {
-                    List<Category> categories = categoryService.GetCategories();
-                    response.Body = parseToJSON(categories);
-                    return response;
+                    if(request.Method == "read")
+                    {
+                        List<Category> categories = categoryService.GetCategories();
+                        response.Body = parseToJSON(categories);
+                        return response;
+                    }
+                    if(request.Method == "create")
+                    {
+                        Category messageCategory = parseFromJSON(request.Body);
+
+                        int newID = categoryService.NextSequenceID();
+                        bool isCreated = categoryService.CreateCategory(newID, messageCategory.Name);
+
+                        Category createdCategory = categoryService.GetCategory(newID);
+                        if (isCreated)
+                        {
+                            response.Status = "2 Created";
+                            response.Body = parseToJSON(createdCategory);
+                            return response;
+                        }
+                        else
+                        {
+                            response.Status = "6 Internal Error";
+                            return response;
+                        }
+                    }
                 }
                 if(request.Path.StartsWith("/api/categories/"))
                 {
@@ -133,6 +156,21 @@ namespace Assignment3
                         if (isUpdated)
                         {
                             response.Status = "3 updated";
+                            return response;
+                        }
+                        else
+                        {
+                            response.Status = "5 not found";
+                            return response;
+                        }
+                    }
+                    if(request.Method == "delete")
+                    {
+                        bool isDeleted = categoryService.DeleteCategory(urlParser.Id);
+
+                        if (isDeleted)
+                        {
+                            response.Status = "1 ok";
                             return response;
                         }
                         else
